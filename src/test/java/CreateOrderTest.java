@@ -1,4 +1,6 @@
 import client.User;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import io.qameta.allure.Description;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.RestAssured;
@@ -16,21 +18,21 @@ public class CreateOrderTest {
     StepsTest stepsTest = new StepsTest();
     private User user;
     private int CurrentStatusCode;
-    private String payload = "{\"ingredients\": [\"61c0c5a71d1f82001bdaaa6d\",\"61c0c5a71d1f82001bdaaa72\"]}";
-    private String noIngredientsPayload = "{\"ingredients\": []}";
-    private String invalidIngredientsPayload = "{\"ingredients\": [\"invalid id1\",\"invalid id2\"]}";
+    private static final String noIngredientsPayload = "{\"ingredients\": []}";
+    private static final String invalidIngredientsPayload = "{\"ingredients\": [\"invalid id1\",\"invalid id2\"]}";
 
     @Before
     public void setUp() {
         RestAssured.baseURI = BASE_URL;
         user = new User();
         order = new Order();
+
     }
 
     @Test
     @DisplayName("Create order")
     @Description("Create order with authorization")
-    public void CreateOrderWithAuthAndIngredientsTest() {
+    public void createOrderWithAuthAndIngredientsTest() {
         UserData userData = randomUser();
         user.create(userData);
 
@@ -42,6 +44,7 @@ public class CreateOrderTest {
 
         String bearerToken = body.path("accessToken");
 
+        String payload = order.payloadGenerate();
         Response orderBody = order.createOrder(payload,bearerToken);
         String bodyAsString = orderBody.asString();
         CurrentStatusCode = orderBody.statusCode();
@@ -54,7 +57,8 @@ public class CreateOrderTest {
     @Test
     @DisplayName("Create order")
     @Description("Create order without authorization")
-    public void CreateOrderWithoutAuthAndWithIngredientsTest() {
+    public void createOrderWithoutAuthAndWithIngredientsTest() {
+        String payload = order.payloadGenerate();
         Response orderBody = order.createOrder(payload,null);
         String bodyAsString = orderBody.asString();
         CurrentStatusCode = orderBody.statusCode();
@@ -66,7 +70,7 @@ public class CreateOrderTest {
     @DisplayName("Create order")
     @Description("Create order without ingredients")
 
-    public void CreateOrderWithAuthAndWithoutIngredientsTest() {
+    public void createOrderWithAuthAndWithoutIngredientsTest() {
         UserData userData = randomUser();
         user.create(userData);
 
@@ -90,7 +94,7 @@ public class CreateOrderTest {
     @Test
     @DisplayName("Create order")
     @Description("Create order with invalid ingredients ids")
-    public void CreateOrderWithAuthAndInvalidIngredientsTest() {
+    public void createOrderWithAuthAndInvalidIngredientsTest() {
         UserData userData = randomUser();
         user.create(userData);
 

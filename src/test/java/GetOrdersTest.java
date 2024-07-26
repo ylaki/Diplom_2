@@ -29,7 +29,7 @@ public class GetOrdersTest {
     @Test
     @DisplayName("Get orders list")
     @Description("Create orders list by authorized user")
-    public void GetOrdersList() {
+    public void getOrdersList() {
         UserData userData = randomUser();
         user.create(userData);
 
@@ -54,7 +54,7 @@ public class GetOrdersTest {
     @Test
     @DisplayName("Get orders list")
     @Description("Create orders list without authorization")
-    public void GetOrdersListWithoutAuth() {
+    public void getOrdersListWithoutAuth() {
         order.createOrder(payload,null);
         Response getOrders = order.getOrders(null);
         String bodyAsString = getOrders.asString();

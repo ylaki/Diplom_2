@@ -21,4 +21,9 @@ public class Utils {
         String randomString = randomString(length);
         return randomString.toLowerCase() + "@ussr.ru";
     }
+
+    public static int randomNumber(int number) {
+        Random rand = new Random();
+        return rand.nextInt(number);
+    }
 }
